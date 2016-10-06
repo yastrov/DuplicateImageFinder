@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setAcceptDrops(true);
     // Progress Bar
     ui->progressBar->setVisible(false);
-    ui->setFiltersBtn->setChecked(true);
+    ui->useFiltersBtn->setChecked(true);
     // Win Extras
 #if defined(USE_WIN_EXTRAS) && defined(Q_OS_WIN)
     buttonWinExtra = new QWinTaskbarButton(this);
