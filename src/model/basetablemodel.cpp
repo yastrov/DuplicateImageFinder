@@ -56,7 +56,10 @@ void BaseTableModel::saveToFileFunc(const QString &fileName) const
         {
             const HashFileInfoStruct &s = it.next();
             out << QString("%1").arg(s.groupID) << delimeter;
-            out << s.size << delimeter << s.hash.toHex() << delimeter << s.fileName << endOfLine;
+            out << s.size << delimeter << s.hash.toHex() << delimeter << s.fileName
+                << delimeter << QString("%1").arg(s.height)
+                << delimeter << QString("%1").arg(s.width)
+                << endOfLine;
         }
         file.close();
     }
@@ -93,15 +96,19 @@ void BaseTableModel::loadFromFileFunc(const QString &fileName)
         QStringList lineList;
         while(!in.atEnd()) {
             lineList = in.readLine().split(delimeter);
-            if(lineList.size() < 4) {
+            if(lineList.size() < 6) {
                 file.close();
                 return;
             }
             HashFileInfoStruct strct;
             strct.groupID = lineList[0].toUInt();
             strct.size = lineList[1].toLong();
-            //strct.hash = QByteArray::fromHex(QByteArray(lineList[2]));
+            QByteArray tmp;
+            tmp.append(lineList[2]);
+            strct.hash = QByteArray::fromHex(tmp);
             strct.fileName = lineList[3];
+            strct.height = lineList[4].toUInt();
+            strct.width = lineList[5].toUInt();
             strct.checked = false;
             list->append(strct);
         }
