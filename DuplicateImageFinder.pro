@@ -31,10 +31,16 @@ win32-g++: {
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_highgui2413d.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_core2413d.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_imgproc2413d.dll.a
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_highgui2413d.dll
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_core2413d.dll
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_imgproc2413d.dll
     } else {
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_highgui2413.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_core2413.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_imgproc2413.dll.a
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_highgui2413.dll
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_core2413.dll
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_imgproc2413.dll
     }
 }
 
