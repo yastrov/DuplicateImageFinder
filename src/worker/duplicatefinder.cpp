@@ -15,6 +15,8 @@ int powi (int base, unsigned int exp)
     return res;
 }
 
+const int powTable[8] = {1, 2, 4, 8, 16, 32, 64, 128};
+
 DuplicateFinder::DuplicateFinder(QObject *parent) :
     DirWalker(parent),
     resultCount(0)
@@ -169,7 +171,7 @@ void DuplicateFinder::dHash(HashFileInfoStruct& strct, size_t hashSize)
     for(const bool& b: difference) {
         hashByEight = index % 8;
         if(b) {
-            decimal_value += powi(2, hashByEight);
+            decimal_value += powTable[hashByEight];
         }
         if(hashByEight == 7) {
             QByteArray ar;
