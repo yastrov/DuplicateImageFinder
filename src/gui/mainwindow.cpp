@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
         }
         qobject_cast<BaseTableModel*>(ui->tableView->model())->unselectAll();
     });
+    connect(ui->actionAbout_Qt, &QAction::triggered, this, [this](){ QMessageBox::aboutQt(this); });
 }
 
 void MainWindow::showEvent(QShowEvent *e)
