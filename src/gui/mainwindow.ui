@@ -440,6 +440,7 @@
     <addaction name="actionClear_all_flags"/>
     <addaction name="actionRemove_checked"/>
     <addaction name="actionSelect_files_in_concrete_folder"/>
+    <addaction name="actionRemoved_checked_to_Trash"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWork_with_results"/>
@@ -604,6 +605,17 @@
   <action name="actionAbout_Qt">
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionRemoved_checked_to_Trash">
+   <property name="text">
+    <string>Removed checked to Trash</string>
+   </property>
+   <property name="toolTip">
+    <string>Removed checked to System Trash (Recycle Bin)</string>
+   </property>
+   <property name="statusTip">
+    <string>Removed checked to System Trash (Recycle Bin)</string>
    </property>
   </action>
  </widget>

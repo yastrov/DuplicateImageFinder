@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
                               "<p>Written by Yuriy (Yuri) Astrov<br/>"
                               "Based on QT 5<br/>"
                               "Licensed by GPLv2<br/>"
-                              "Version: %1<br/>"
+                              "Version: %2<br/>"
                               "URL: <a href='%2'>%2</a><p>").arg(APP_VERSION, APP_URL));
     });
 
@@ -67,6 +67,23 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     });
     connect(ui->actionRemove_checked, &QAction::triggered, this, &MainWindow::on_pushButton_Remove_Checked_clicked);
+#if defined(Q_OS_WIN)
+    connect(ui->actionRemoved_checked_to_Trash, &QAction::triggered, this, [this](bool checked){
+            Q_UNUSED(checked)
+            QMessageBox::StandardButton reply = QMessageBox::question(this,
+                                                                      qApp->applicationName(),
+                                                                      tr("Are you sure to remove checked items?"),
+                                                                      QMessageBox::Yes|QMessageBox::No);
+            if (reply == QMessageBox::No) {
+                return;
+            }
+            if(ui->tableView->model() != nullptr) {
+                qobject_cast<BaseTableModel*>(ui->tableView->model())->removeCheckedToTrashFunc();
+            }
+        });
+#else
+    ui->actionRemoved_checked_to_Trash->setVisible(false);
+#endif
     connect(ui->actionSelect_files_in_concrete_folder, &QAction::triggered, this, [this](){
         const QString dirName = QFileDialog::getExistingDirectory(this, tr("Choose Directory"),
                                                                   dirNameForFolderDialog,
