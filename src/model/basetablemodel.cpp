@@ -121,27 +121,35 @@ void BaseTableModel::loadFromFileFunc(const QString &fileName)
 
 void BaseTableModel::removeCheckedFunc()
 {
-    QListIterator<HashFileInfoStruct> it(*items);
+    QList<HashFileInfoStruct>::iterator it = items->begin();
     int removed = 0;
-    int row = 0;
-    QModelIndex index;
-    while(it.hasNext())
+    emit this->layoutAboutToBeChanged();
+    while(it != items->end())
     {
-        const HashFileInfoStruct &strct = it.next();
+        const HashFileInfoStruct &strct = *it;
         if(strct.checked)
         {
             if(QDir(strct.fileName).remove(strct.fileName)) {
                 ++removed;
-                removeRow(row, index);
+                it = items->erase(it);
             } else {
                 QMessageBox msgBox;
                 msgBox.setText(QObject::tr("Can't delete file: %1").arg(strct.fileName));
                 msgBox.setIcon(QMessageBox::Warning);
                 msgBox.exec();
+                ++it;
             }
         }
-        ++row;
+        else {
+            ++it;
+        }
     }
+    /* Easy way to overload all model, not calculate every delete row number
+         * (that have been changed because previous row deleted too.)
+        */
+    emit this->layoutChanged();
+    const int count = items->count();
+    emit dataChanged(createIndex(0,0), createIndex(count,0));
 }
 
 //Slots
