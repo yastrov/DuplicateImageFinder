@@ -152,6 +152,60 @@ void BaseTableModel::removeCheckedFunc()
     emit dataChanged(createIndex(0,0), createIndex(count,0));
 }
 
+#if defined(Q_OS_WIN)
+void BaseTableModel::removeCheckedToTrashFunc()
+{
+    // For WinAPI call
+    std::wstring path;
+    path.reserve(OS_WIN_PATH_RESERVE);
+    int result;
+    SHFILEOPSTRUCT shfos = {};
+    shfos.hwnd = nullptr;         // handle to window that will own generated windows, if applicable
+    shfos.wFunc = FO_DELETE;
+    shfos.pTo = nullptr;          // not used for deletion operations
+    shfos.fFlags = FOF_ALLOWUNDO; // use the recycle bin
+    // End WinAPI
+    QList<HashFileInfoStruct>::iterator it = items->begin();
+    int removed = 0;
+    emit this->layoutAboutToBeChanged();
+    while(it != items->end())
+    {
+        const HashFileInfoStruct &strct = *it;
+        if(strct.checked)
+        {
+            path = strct.fileName.toStdWString();
+            path.append(1, L'\0');
+            shfos.pFrom = path.c_str();
+            result = SHFileOperation(&shfos);
+            if(result == DE_SHFO_SUCCESS) {
+                ++removed;
+                it = items->erase(it);
+            } else {
+                QMessageBox msgBox;
+                if(result == DE_INVALIDFILES) {
+                    msgBox.setWindowTitle(QObject::tr("Can't delete item!"));
+                    msgBox.setText(QObject::tr("The path %1 was invalid.").arg(strct.fileName));
+                } else {
+                    msgBox.setText(QObject::tr("Can't delete file: %1").arg(strct.fileName));
+                }
+                msgBox.setIcon(QMessageBox::Warning);
+                msgBox.exec();
+                ++it;
+            }
+        }
+        else {
+            ++it;
+        }
+    }
+    /* Easy way to overload all model, not calculate every delete row number
+     * (that have been changed because previous row deleted too.)
+    */
+    emit this->layoutChanged();
+    const int count = items->count();
+    emit dataChanged(createIndex(0,0), createIndex(count,0));
+}
+#endif
+
 //Slots
 void BaseTableModel::saveToFile(QString fileName)
 {
