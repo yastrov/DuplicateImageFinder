@@ -203,3 +203,59 @@ QString DuplicatesTableModel::getFileName(const QModelIndex &index) const
     const HashFileInfoStruct &item = items->at(index.row());
     return item.fileName;
 }
+
+bool DuplicatesTableModel::checkOneInGroupUnChecked()
+{
+    uint currentGroup = 0;
+    int numOfAll = 0;
+    int numOfChecked = 0;
+    QList<HashFileInfoStruct> * const list = items.data();
+    for(const HashFileInfoStruct &s: qAsConst(*list)){
+        if(s.groupID != currentGroup) {
+            currentGroup = s.groupID;
+            if(numOfAll == numOfChecked) {
+                return false;
+            }
+            numOfAll = 0;
+            numOfChecked = 0;
+        } else {
+            if(s.checked) ++numOfChecked;
+        }
+        ++numOfAll;
+    }
+    if(numOfAll == numOfChecked) {
+        return false;
+    }
+    return true;
+}
+
+void DuplicatesTableModel::removeCheckedFunc()
+{
+    if(!checkOneInGroupUnChecked()) {
+        QMessageBox::StandardButton reply = QMessageBox::question(nullptr,
+                                                                  qApp->applicationName(),
+                                                                  tr("In one group all files have been checked!.\nDo you want to continue?"),
+                                                                  QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::No) {
+            return;
+        }
+    }
+    BaseTableModel::removeCheckedFunc();
+}
+
+#if defined(Q_OS_WIN)
+void DuplicatesTableModel::removeCheckedToTrashFunc()
+{
+    if(!checkOneInGroupUnChecked()) {
+        QMessageBox::StandardButton reply = QMessageBox::question(nullptr,
+                                                                  qApp->applicationName(),
+                                                                  tr("In one group all files have been checked!.\nDo you want to continue?"),
+                                                                  QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::No) {
+            return;
+        }
+    }
+    BaseTableModel::removeCheckedToTrashFunc();
+}
+#endif
+

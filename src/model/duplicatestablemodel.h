@@ -8,6 +8,7 @@
 #ifdef MYPREFIX_DEBUG
 #include <QDebug>
 #endif
+#include <QMessageBox>
 
 class DuplicatesTableModel : public BaseTableModel
 {
@@ -33,6 +34,11 @@ public:
     enum Column {checked, fileName, groupId, size, width, height, hash};
 
     QString getFileName(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    bool checkOneInGroupUnChecked();
+    void removeCheckedFunc() Q_DECL_OVERRIDE;
+#if defined(Q_OS_WIN)
+    void removeCheckedToTrashFunc() Q_DECL_OVERRIDE;
+#endif
 };
 
 #endif // DUPLICATESTABLEMODEL_H
