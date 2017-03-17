@@ -9,13 +9,21 @@
 #include <QDebug>
 #endif
 #include <QMessageBox>
+#include <QIcon>
+#include <QPixmap>
+#include <QMultiHash>
+
+typedef struct _MyCacheModelData {
+    QPixmap pixmap;
+    QString short_fname;
+} MyCacheModelData;
 
 class DuplicatesTableModel : public BaseTableModel
 {
     Q_OBJECT
 public:
-    explicit DuplicatesTableModel(QSharedPtrListHFIS content, QObject *parent=nullptr)
-        : BaseTableModel(content, parent) {}
+    explicit DuplicatesTableModel(QSharedPtrListHFIS content, int maxImageHeight, QObject *parent=nullptr);
+    explicit DuplicatesTableModel(QSharedPtrListHFIS content, QObject *parent=nullptr);
     explicit DuplicatesTableModel(QObject *parent=nullptr)
         : BaseTableModel(parent) {}
     virtual ~DuplicatesTableModel() {}
@@ -31,7 +39,7 @@ public:
     bool setHeaderData(int, Qt::Orientation, const QVariant&,
                        int=Qt::EditRole) { return false; }
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
-    enum Column {checked, fileName, groupId, size, width, height, hash};
+    enum Column {checked, icon, fileName, groupId, size, width, height, hash};
 
     QString getFileName(const QModelIndex &index) const Q_DECL_OVERRIDE;
     bool checkOneInGroupUnChecked();
@@ -39,6 +47,11 @@ public:
 #if defined(Q_OS_WIN)
     void removeCheckedToTrashFunc() Q_DECL_OVERRIDE;
 #endif
+    void setMaxImageHeight(int value) {maxImageHeight=value;}
+
+private:
+    QMultiHash<QString, MyCacheModelData> cache;
+    int maxImageHeight;
 };
 
 #endif // DUPLICATESTABLEMODEL_H

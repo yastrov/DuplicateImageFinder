@@ -1,7 +1,7 @@
 #include "duplicatestablemodel.h"
 
 namespace {
-const int MaxColumns = 7;
+const int MaxColumns = 8;
 QColor firstColor = QColor(Qt::white);
 QColor secondColor = QColor(Qt::green);
 
@@ -14,6 +14,23 @@ QString getFileNameShort(const QString &path)
     return  path.section('/', -1);
 #endif
 }
+}
+
+DuplicatesTableModel::DuplicatesTableModel(QSharedPtrListHFIS content, QObject *parent):
+    DuplicatesTableModel(content, 64, parent)
+{}
+
+DuplicatesTableModel::DuplicatesTableModel(QSharedPtrListHFIS content, int maxImageHeight, QObject *parent)
+        : BaseTableModel(content, parent), maxImageHeight(maxImageHeight) {
+    QList<HashFileInfoStruct> * const list = content.data();
+    for(const HashFileInfoStruct &s: qAsConst(*list)){
+        MyCacheModelData data;
+        data.short_fname = getFileNameShort(s.fileName);
+
+        QImage image(s.fileName);
+        data.pixmap = QPixmap::fromImage(image).scaledToHeight(maxImageHeight);
+        cache.insert(s.fileName, data);
+    }
 }
 
 int DuplicatesTableModel::rowCount(const QModelIndex &index) const
@@ -41,6 +58,7 @@ QVariant DuplicatesTableModel::headerData(int section,
         case Column::size: return tr("Size"); break;
         case Column::width: return tr("Width"); break;
         case Column::height: return tr("Height"); break;
+        case Column::icon: return tr("icon"); break;
         default: Q_ASSERT(false);
         }
     }
@@ -59,12 +77,13 @@ QVariant DuplicatesTableModel::data(const QModelIndex &index, int role) const
         QStyleOptionComboBox option;
         switch (index.column()) {
         case Column::checked: option.currentText = QString(""); break;
-        case Column::fileName: option.currentText = getFileNameShort(item.fileName); break;
+        case Column::fileName: option.currentText = cache.value(item.fileName).short_fname; break;
         case Column::hash: option.currentText = item.hash.toHex(); break;
         case Column::groupId: option.currentText = item.groupID; break;
         case Column::size: option.currentText = QString::number(item.size); break;
         case Column::width: option.currentText = QString::number(item.width); break;
         case Column::height: option.currentText = QString::number(item.height); break;
+        case Column::icon: return cache.value(item.fileName).pixmap.size(); break;
         default: Q_ASSERT(false);
         }
         QFontMetrics fontMetrics(data(index, Qt::FontRole)
@@ -78,12 +97,13 @@ QVariant DuplicatesTableModel::data(const QModelIndex &index, int role) const
     case Qt::DisplayRole: {
         switch (index.column()) {
         case Column::checked: return QVariant();
-        case Column::fileName: return getFileNameShort(item.fileName);
+        case Column::fileName: return cache.value(item.fileName).short_fname;
         case Column::hash: return item.hash.toHex();
         case Column::groupId: return item.groupID;
         case Column::size: return item.size;
         case Column::width: return item.width;
         case Column::height: return item.height;
+        case Column::icon: return "";
         default: Q_ASSERT(false);
         }
     }
@@ -111,6 +131,12 @@ QVariant DuplicatesTableModel::data(const QModelIndex &index, int role) const
     case Qt::BackgroundColorRole: {
         QColor color = item.groupID % 2 == 0? firstColor : secondColor;
         return QVariant(color);
+    }
+    case Qt::DecorationRole: {
+        if(index.column() == Column::icon) {
+            return cache.value(item.fileName).pixmap;
+        }
+        return QVariant();
     }
     default: return QVariant();
     }
