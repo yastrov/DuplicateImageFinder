@@ -12,6 +12,7 @@
 #include "../worker/duplacatehistogramqfinder.h"
 #include "../hashfileinfostruct.h"
 #include "../constants.h"
+#include "../settingshelper.h"
 #include <QProcess>
 #if defined(USE_WIN_EXTRAS) && defined(Q_OS_WIN)
 #include <QWinTaskbarButton>
@@ -64,6 +65,10 @@ private:
     void callBeforeBackgrowndWorkerStarted();
     // Filters
     bool useFilters() const;
+    // Settings
+    SettingsHelper _settingsHelper;
+    void loadSettings();
+    void storeSettings();
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;

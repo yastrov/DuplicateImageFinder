@@ -51,6 +51,7 @@ SOURCES += src/main.cpp\
     src/worker/duplicatefinder.cpp \
     src/model/basetablemodel.cpp \
     src/model/duplicatestablemodel.cpp \
+    src/settingshelper.cpp \
     src/worker/duplacatehistogramfinder.cpp \
     src/worker/duplacatehistogramqfinder.cpp
 
@@ -61,6 +62,7 @@ HEADERS  += src/gui/mainwindow.h \
     src/worker/duplicatefinder.h \
     src/model/basetablemodel.h \
     src/model/duplicatestablemodel.h \
+    src/settingshelper.h \
     src/worker/duplacatehistogramfinder.h \
     src/constants.h \
     src/worker/duplacatehistogramqfinder.h

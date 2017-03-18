@@ -111,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->AlgoComboBox->addItem(tr("Histogram compare"), DiffSearchMethod::Histogram);
     ui->AlgoComboBox->addItem(tr("Histogram Four compare"), DiffSearchMethod::Histogram);
     ui->AlgoComboBox->setCurrentIndex(1);
+    loadSettings();
 }
 
 void MainWindow::showEvent(QShowEvent *e)
@@ -466,6 +467,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         thread->wait(250);
         event->accept();
     } else {
+        storeSettings();
         event->accept();
     }
 }
@@ -594,4 +596,34 @@ void MainWindow::on_AlgoComboBox_currentIndexChanged(int index)
         ui->methodComboBox->addItem(tr("Intersection"), HistogramMethod::CV_COMP_INTERSECT);
         ui->methodComboBox->addItem(tr("Bhattacharyya distance"), HistogramMethod::CV_COMP_BHATTACHARYYA);
     }
+}
+
+void MainWindow::storeSettings()
+{
+#ifdef MYPREFIX_DEBUG
+    qDebug()<<"MainWindow::storeSettings";
+#endif
+    _settingsHelper.saveFileExtFilters(fileFilters);
+    _settingsHelper.saveDiffAlgoIndex(ui->AlgoComboBox->currentIndex());
+    _settingsHelper.saveMainWindowPosition(size(), pos());
+    _settingsHelper.saveEqCoeff(ui->coeffEqualSpinBox->value());
+    _settingsHelper.saveMaxImageHeight(maxImageHeight);
+}
+
+void MainWindow::loadSettings()
+{
+#ifdef MYPREFIX_DEBUG
+    qDebug()<<"MainWindow::loadSettings";
+#endif
+    fileFilters = _settingsHelper.loadFileExtFilters();
+    this->setStyleSheet(_settingsHelper.loadFontStyleSheet());
+    ui->AlgoComboBox->setCurrentIndex(_settingsHelper.loadDiffAlgoIndex());
+    ui->coeffEqualSpinBox->setValue(_settingsHelper.loadEqCoeff());
+    maxImageHeight = _settingsHelper.loadMaxImageHeight();
+    // Load MainWindow position and size
+    QSize size;
+    QPoint pos;
+    _settingsHelper.loadMainWindowPosition(size, pos);
+    resize(size);
+    move(pos);
 }
