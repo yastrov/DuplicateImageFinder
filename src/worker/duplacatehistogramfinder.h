@@ -17,8 +17,6 @@
 #include <algorithm> // For sorting
 #include "../constants.h"
 
-#define SAY_PROGRESS_EVERY 10
-
 typedef struct _Local_Hist_FInfo1 {
     QString fileName;
     qint64 size;

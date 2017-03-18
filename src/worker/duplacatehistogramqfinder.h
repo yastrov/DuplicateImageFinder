@@ -18,8 +18,6 @@
 #include "../constants.h"
 #include "duplacatehistogramfinder.h"
 
-#define SAY_PROGRESS_EVERY 10
-
 typedef struct _Local_Hist_FInfo2 {
     QString fileName;
     qint64 size;

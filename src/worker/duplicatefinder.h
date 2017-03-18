@@ -7,6 +7,7 @@
 #include <QThread>
 #include "../hashfileinfostruct.h"
 #include "../worker/dirwalker.h"
+#include "../constants.h"
 #ifdef MYPREFIX_DEBUG
 #include <QDebug>
 #endif
@@ -14,8 +15,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-
-#define SAY_PROGRESS_EVERY 10
 
 class DuplicateFinder : public DirWalker
 {
