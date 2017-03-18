@@ -232,9 +232,9 @@ QString DuplicatesTableModel::getFileName(const QModelIndex &index) const
 
 bool DuplicatesTableModel::checkOneInGroupUnChecked()
 {
-    uint currentGroup = 0;
-    int numOfAll = 0;
-    int numOfChecked = 0;
+    quint64 currentGroup = 0;
+    quint64 numOfAll = 0;
+    quint64 numOfChecked = 0;
     QList<HashFileInfoStruct> * const list = items.data();
     for(const HashFileInfoStruct &s: qAsConst(*list)){
         if(s.groupID != currentGroup) {
