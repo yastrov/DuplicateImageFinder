@@ -47,6 +47,8 @@ int DuplicatesTableModel::columnCount(const QModelIndex &index) const
 QVariant DuplicatesTableModel::headerData(int section,
                                           Qt::Orientation orientation, int role) const
 {
+    if(role == Qt::ToolTipRole && section==Column::difference)
+        return tr("Defference between this and base group image.");
     if (role != Qt::DisplayRole)
         return QVariant();
     if (orientation == Qt::Horizontal) {
