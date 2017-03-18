@@ -10,6 +10,7 @@ typedef struct {
     quint64 groupID;
     qint64 size;
     uint height, width;
+    double diff;
 } HashFileInfoStruct;
 
 typedef QSharedPointer<QList<HashFileInfoStruct>> QSharedPtrListHFIS;

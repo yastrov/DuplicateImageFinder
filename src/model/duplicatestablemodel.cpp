@@ -1,7 +1,7 @@
 #include "duplicatestablemodel.h"
 
 namespace {
-const int MaxColumns = 8;
+const int MaxColumns = 9;
 QColor firstColor = QColor(Qt::white);
 QColor secondColor = QColor(Qt::green);
 
@@ -59,6 +59,7 @@ QVariant DuplicatesTableModel::headerData(int section,
         case Column::width: return tr("Width"); break;
         case Column::height: return tr("Height"); break;
         case Column::icon: return tr("icon"); break;
+        case Column::difference:  return tr("Difference"); break;
         default: Q_ASSERT(false);
         }
     }
@@ -84,6 +85,7 @@ QVariant DuplicatesTableModel::data(const QModelIndex &index, int role) const
         case Column::width: option.currentText = QString::number(item.width); break;
         case Column::height: option.currentText = QString::number(item.height); break;
         case Column::icon: return cache.value(item.fileName).pixmap.size(); break;
+        case Column::difference: option.currentText = QString::number(item.diff); break;
         default: Q_ASSERT(false);
         }
         QFontMetrics fontMetrics(data(index, Qt::FontRole)
@@ -104,6 +106,7 @@ QVariant DuplicatesTableModel::data(const QModelIndex &index, int role) const
         case Column::width: return item.width;
         case Column::height: return item.height;
         case Column::icon: return "";
+        case Column::difference: return item.diff;
         default: Q_ASSERT(false);
         }
     }
@@ -125,6 +128,7 @@ QVariant DuplicatesTableModel::data(const QModelIndex &index, int role) const
         case Column::size: return item.size;
         case Column::width: return item.width;
         case Column::height: return item.height;
+        case Column::difference: return item.diff;
         default: Q_ASSERT(false);
         }
     }
