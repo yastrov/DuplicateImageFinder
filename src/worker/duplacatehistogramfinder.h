@@ -24,6 +24,7 @@ typedef struct _Local_Hist_FInfo1 {
     qint64 size;
     uint height, width;
     cv::MatND hist;
+    double diff;
 } Local_Hist_FInfo1;
 
 typedef struct _Local_Hist_Settings1 {

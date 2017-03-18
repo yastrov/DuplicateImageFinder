@@ -39,13 +39,15 @@ void DuplacateHistogramFinder::process()
     {
         base = images_p[i];
         if(base != nullptr) {
+            base->diff=1.;
             store.insert(current_group, base);
             for(q_coll_s_t j=i+1; j<total_files; ++j)
             {
                 second = images_p[j];
                 if(second != nullptr) {
                     diff = compareHist( base->hist, second->hist, compare_method);
-                    if(diff < epsilon) {
+                    second->diff = diff;
+                    if(diff > epsilon) {
                         images_p[j] = nullptr;
                         store.insert(current_group, second);
                     }
@@ -69,7 +71,7 @@ void DuplacateHistogramFinder::process()
             continue;
 
         std::sort(values.begin(), values.end(), [](Local_Hist_FInfo1 *x, Local_Hist_FInfo1 *y) {
-            return x->height*x->width < y->height*y->width;
+            return x->height*x->width > y->height*y->width;
         });
         QListIterator<Local_Hist_FInfo1 *> it2(values);
         Local_Hist_FInfo1 *value = it2.next();
@@ -79,6 +81,7 @@ void DuplacateHistogramFinder::process()
         st.width = value->width;
         st.height = value->height;
         st.groupID = key;
+        st.diff = value->diff;
         result->append(st);
         while(it2.hasNext())
         {
@@ -89,6 +92,7 @@ void DuplacateHistogramFinder::process()
             _st.width = value->width;
             _st.height = value->height;
             _st.groupID = key;
+            _st.diff = value->diff;
             result->append(_st);
         }
     }
@@ -97,7 +101,6 @@ void DuplacateHistogramFinder::process()
     images_p.clear();
     images.clear();
     //
-    qDebug()<<"RESULT OF DUP: "<<result->size();
     emit currentProcessedFiles(result->size());
     emit finishedWData(result);
     emit finished();
