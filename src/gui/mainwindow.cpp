@@ -9,6 +9,7 @@ const quint64 MAX_INT = static_cast<qint64>(std::numeric_limits<int>::max());
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    maxImageHeight(86),
     dirNameForFolderDialog(QDir::current().dirName()),
     thread(new QThread(this))
 {
@@ -175,7 +176,8 @@ void MainWindow::showDuplicatesInTable(QSharedPtrListHFIS itemsPtr)
     QTableView *table = ui->tableView;
     if(table->model() != nullptr)
         table->model()->deleteLater();
-    DuplicatesTableModel *model = new DuplicatesTableModel(itemsPtr, this);
+    DuplicatesTableModel *model = new DuplicatesTableModel(itemsPtr, maxImageHeight, this);
+    model->setMaxImageHeight(maxImageHeight);
     table->setModel(model);
     table->setSortingEnabled(true);
     table->sortByColumn(DuplicatesTableModel::Column::groupId);
@@ -228,6 +230,50 @@ void MainWindow::startDuplicateSearchInBackground()
 
         connect(worker, &DuplicateFinder::sayTotalFiles, this, &MainWindow::maximumFilesFoProgressReceived);
         connect(worker, &DuplicateFinder::currentProcessedFiles, this, &MainWindow::currentProcessedFilesForProgressReceived);
+#ifdef MYPREFIX_DEBUG
+        qDebug() << "startThread";
+#endif
+        thread->start();
+        setUiPushButtonsEnabled(false);
+    }
+}
+
+// Duplicate Files Search
+void MainWindow::startDuplicateHistogramSearchInBackground()
+{
+#ifdef MYPREFIX_DEBUG
+    qDebug() << "startDuplicateHistogramSearchInBackground";
+#endif
+    if (thread->isRunning()) {
+        thread->wait();
+    }
+    QList<QDir> dirs = getElementsFromDirsListWidget();
+    if(!dirs.isEmpty() && !thread->isRunning())
+    {
+        DuplacateHistogramFinder *worker = new DuplacateHistogramFinder(nullptr);
+        worker->setQDir(dirs);
+
+        Local_Hist_Settings1 settings;
+        settings.epsilon = ui->deltaSpinBox->value();
+        settings.hist_compare_method = 1;
+        worker->setSettings(settings);
+
+        if(useFilters()) worker->setFilters(fileFilters);
+        callBeforeBackgrowndWorkerStarted();
+        worker->moveToThread(thread);
+        //connect(thread, SIGNAL(started()), worker, SLOT(process()));
+        QObject::connect(thread, &QThread::started, worker, &DuplacateHistogramFinder::process);
+        //connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+        /*No examples where QThread::finished connected to &QThread::quit !
+         * And then we need Worker::finished. */
+        QObject::connect(worker, &DuplacateHistogramFinder::finished, thread, &QThread::quit);
+        QObject::connect(thread, &QThread::finished, worker, &DuplacateHistogramFinder::deleteLater);//From Off documentation
+        QObject::connect(worker, &DuplacateHistogramFinder::finished, this, &MainWindow::finishedThread);
+        //connect(worker, SIGNAL(finishedWData(QList<HashFileInfoStruct> *)), this, SLOT(showDuplicatesInTable(QList<HashFileInfoStruct> *)));
+        QObject::connect(worker, &DuplacateHistogramFinder::finishedWData, this, &MainWindow::showDuplicatesInTable);
+
+        connect(worker, &DuplacateHistogramFinder::sayTotalFiles, this, &MainWindow::maximumFilesFoProgressReceived);
+        connect(worker, &DuplacateHistogramFinder::currentProcessedFiles, this, &MainWindow::currentProcessedFilesForProgressReceived);
 #ifdef MYPREFIX_DEBUG
         qDebug() << "startThread";
 #endif
