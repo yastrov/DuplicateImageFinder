@@ -14,20 +14,18 @@ MainWindow::MainWindow(QWidget *parent) :
     thread(new QThread(this))
 {
     ui->setupUi(this);
+    setWindowTitle(qApp->applicationName());
     initDirsListWidget();
     initTableWidget();
-    fileFilters << "*.jpg" << "*.png" << "*.gif" << "*.jpeg" << "*.bmp"
-                << "*.JPG"<< "*.PNG" << "*.GIF" << "*.JPEG" << "*.BMP"
-                <<"*.jpe"<<"*.jp2"<<"*.pbm"<<"*.pgm"<<"*.ppm"<<"*.tiff"<<"*.tif" ;
     QObject::connect(ui->actionAbout, &QAction::triggered, this, [this](bool checked){
         Q_UNUSED(checked)
         QMessageBox::about(this,
-                           tr("About DuplicateImageFinder"),
+                           tr("About %1").arg(qApp->applicationName()),
                            tr("<h2>DuplicateImageFinder</h2>"
                               "<p>Written by Yuriy (Yuri) Astrov<br/>"
                               "Based on QT 5<br/>"
                               "Licensed by GPLv2<br/>"
-                              "Version: %2<br/>"
+                              "Version: %1<br/>"
                               "URL: <a href='%2'>%2</a><p>").arg(APP_VERSION, APP_URL));
     });
 
@@ -439,7 +437,7 @@ void MainWindow::on_pushButton_Save_From_Table_clicked()
         if(qF.exists())
         {
             QMessageBox::StandardButton reply = QMessageBox::question(this,
-                                                                      "DuplicateImageFinder",
+                                                                      qApp->applicationName(),
                                                                       tr("File already exists!\nOverwrite?"),
                                                                       QMessageBox::Yes|QMessageBox::No);
             if (reply == QMessageBox::No)
