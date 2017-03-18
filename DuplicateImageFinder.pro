@@ -53,7 +53,8 @@ SOURCES += src/main.cpp\
     src/model/duplicatestablemodel.cpp \
     src/settingshelper.cpp \
     src/worker/duplacatehistogramfinder.cpp \
-    src/worker/duplacatehistogramqfinder.cpp
+    src/worker/duplacatehistogramqfinder.cpp \
+    src/gui/dialog/settingsdialog.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/hashfileinfostruct.h \
@@ -65,9 +66,11 @@ HEADERS  += src/gui/mainwindow.h \
     src/settingshelper.h \
     src/worker/duplacatehistogramfinder.h \
     src/constants.h \
-    src/worker/duplacatehistogramqfinder.h
+    src/worker/duplacatehistogramqfinder.h \
+    src/gui/dialog/settingsdialog.h
 
-FORMS    += src/gui/mainwindow.ui
+FORMS    += src/gui/mainwindow.ui \
+    src/gui/dialog/settingsdialog.ui
 
 VERSION = 0.0.0.1
 QMAKE_TARGET_PRODUCT = DuplicateImageFinder

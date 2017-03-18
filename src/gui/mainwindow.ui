@@ -490,9 +490,16 @@
     <addaction name="actionRemoved_checked_to_Trash"/>
     <addaction name="separator"/>
    </widget>
+   <widget class="QMenu" name="menuService">
+    <property name="title">
+     <string>Service</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWork_with_results"/>
    <addaction name="menuAbout"/>
+   <addaction name="menuService"/>
   </widget>
   <action name="actionAbout">
    <property name="text">
@@ -664,6 +671,11 @@
    </property>
    <property name="statusTip">
     <string>Removed checked to System Trash (Recycle Bin)</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>

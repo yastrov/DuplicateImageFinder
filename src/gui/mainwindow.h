@@ -7,6 +7,7 @@
 #include <QMimeData>
 #include "../model/duplicatestablemodel.h"
 #include "../gui/dialog/filtersdialog.h"
+#include "../gui/dialog/settingsdialog.h"
 #include "../worker/duplicatefinder.h"
 #include "../worker/duplacatehistogramfinder.h"
 #include "../worker/duplacatehistogramqfinder.h"
@@ -90,6 +91,7 @@ private slots:
     void finishedThread();
     void on_methodComboBox_currentIndexChanged(int index);
     void on_AlgoComboBox_currentIndexChanged(int index);
+    void on_actionSettings_triggered();
 };
 Q_DECLARE_METATYPE(MainWindow::DiffSearchMethod)
 #endif // MAINWINDOW_H

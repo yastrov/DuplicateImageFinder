@@ -626,3 +626,23 @@ void MainWindow::loadSettings()
     resize(size);
     move(pos);
 }
+
+void MainWindow::on_actionSettings_triggered()
+{
+    SettingsDialog dialog;
+    dialog.setStyleSheet(this->styleSheet());
+
+    QString fontFamily;
+    int fontSize;
+    _settingsHelper.loadFont(fontSize, fontFamily);
+    QFont font(fontFamily, fontSize);
+
+    dialog.setMaxImageHeight(maxImageHeight);
+    dialog.setFontC(font);
+    if(dialog.exec() == QDialog::Accepted){
+        maxImageHeight = dialog.getMaxImageHeight();
+        font = dialog.getFontC();
+        _settingsHelper.saveFont(font.pointSize(), font.family());
+        this->setStyleSheet(_settingsHelper.loadFontStyleSheet());
+    }
+}
