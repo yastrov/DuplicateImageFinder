@@ -187,6 +187,7 @@ void MainWindow::showDuplicatesInTable(QSharedPtrListHFIS itemsPtr)
     table->sortByColumn(DuplicatesTableModel::Column::groupId);
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
     table->resizeColumnsToContents();
+    table->resizeRowsToContents();
 }
 
 
