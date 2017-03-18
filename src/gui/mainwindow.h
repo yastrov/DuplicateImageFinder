@@ -24,13 +24,17 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    enum DiffSearchMethod { pHash, Histogram };
+    Q_ENUM(DiffSearchMethod)
+    enum HistogramMethod {CV_COMP_CORREL=0, CV_COMP_CHISQR=1, CV_COMP_INTERSECT=2, CV_COMP_BHATTACHARYYA=3 };
+    Q_ENUM(HistogramMethod)
 
 private:
     Ui::MainWindow *ui;
+    int maxImageHeight;
     QString dirNameForFolderDialog;
     QThread* thread;
     QStringList fileFilters;
@@ -59,8 +63,6 @@ private:
     // Filters
     bool useFilters() const;
 
-    int maxImageHeight;
-
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *e);
@@ -79,7 +81,8 @@ private slots:
     // Progress Bars
     void currentProcessedFilesForProgressReceived(q_coll_s_t count);
     void finishedThread();
-    void on_actionHistogramFind_triggered();
+    void on_methodComboBox_currentIndexChanged(int index);
+    void on_AlgoComboBox_currentIndexChanged(int index);
 };
-
+Q_DECLARE_METATYPE(MainWindow::DiffSearchMethod)
 #endif // MAINWINDOW_H

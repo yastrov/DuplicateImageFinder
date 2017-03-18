@@ -106,6 +106,10 @@ MainWindow::MainWindow(QWidget *parent) :
         qobject_cast<BaseTableModel*>(ui->tableView->model())->unselectAll();
     });
     connect(ui->actionAbout_Qt, &QAction::triggered, this, [this](){ QMessageBox::aboutQt(this); });
+    // ComboBox
+    ui->AlgoComboBox->addItem(tr("pHash"), DiffSearchMethod::pHash);
+    ui->AlgoComboBox->addItem(tr("Histogram compare"), DiffSearchMethod::Histogram);
+    ui->AlgoComboBox->setCurrentIndex(1);
 }
 
 void MainWindow::showEvent(QShowEvent *e)
@@ -255,7 +259,8 @@ void MainWindow::startDuplicateHistogramSearchInBackground()
 
         Local_Hist_Settings1 settings;
         settings.epsilon = ui->deltaSpinBox->value();
-        settings.hist_compare_method = 1;
+        const QVariant method = ui->methodComboBox->currentData();
+        settings.hist_compare_method = method.value<HistogramMethod>();
         worker->setSettings(settings);
 
         if(useFilters()) worker->setFilters(fileFilters);
@@ -324,7 +329,14 @@ void MainWindow::on_pushButton_Duplicate_Search_clicked()
     qDebug() << __PRETTY_FUNCTION__ << "\n";
     qDebug() << "QThread: " << thread << "\n";
 #endif
-    startDuplicateSearchInBackground();
+    const QVariant variant = ui->AlgoComboBox->currentData();
+    const DiffSearchMethod method = variant.value<DiffSearchMethod>();
+    switch(method) {
+        case DiffSearchMethod::pHash:
+            startDuplicateSearchInBackground(); break;
+        case DiffSearchMethod::Histogram:
+            startDuplicateHistogramSearchInBackground(); break;
+    }
 }
 
 /*
@@ -508,7 +520,7 @@ void MainWindow::maximumFilesFoProgressReceived(q_coll_s_t count)
 
 void MainWindow::currentProcessedFilesForProgressReceived(q_coll_s_t count)
 {
-    if(count > CONSTANTS::MAX_INT) return;
+    //if(count > CONSTANTS::MAX_INT) return;
     ui->progressBar->setValue(count);
 #if defined(USE_WIN_EXTRAS) && defined(Q_OS_WIN)
     progressWinExtra->setValue(count);
@@ -516,4 +528,23 @@ void MainWindow::currentProcessedFilesForProgressReceived(q_coll_s_t count)
     const QString s = QString::number(count) + " / " + QString::number(ui->progressBar->maximum());
     ui->progressBar->setStatusTip(s);
     ui->statusBar->showMessage(s);
+}
+
+void MainWindow::on_methodComboBox_currentIndexChanged(int index)
+{
+    Q_UNUSED(index)
+}
+
+void MainWindow::on_AlgoComboBox_currentIndexChanged(int index)
+{
+    Q_UNUSED(index)
+    ui->methodComboBox->clear();
+    const QVariant variant = ui->AlgoComboBox->currentData();
+    const DiffSearchMethod method = variant.value<DiffSearchMethod>();
+    if(method == DiffSearchMethod::Histogram) {
+        ui->methodComboBox->addItem(tr("Correlation"), HistogramMethod::CV_COMP_CORREL);
+        ui->methodComboBox->addItem(tr("Chi-Square"), HistogramMethod::CV_COMP_CHISQR);
+        ui->methodComboBox->addItem(tr("Intersection"), HistogramMethod::CV_COMP_INTERSECT);
+        ui->methodComboBox->addItem(tr("Bhattacharyya distance"), HistogramMethod::CV_COMP_BHATTACHARYYA);
+    }
 }

@@ -240,6 +240,37 @@
           </property>
          </widget>
         </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Delta:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="algoLabel">
+          <property name="text">
+           <string>Algo:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="AlgoComboBox">
+          <property name="contextMenuPolicy">
+           <enum>Qt::DefaultContextMenu</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QDoubleSpinBox" name="deltaSpinBox">
+          <property name="toolTip">
+           <string>Difference between two pictures.</string>
+          </property>
+          <property name="value">
+           <double>0.700000000000000</double>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="0">
          <widget class="QPushButton" name="setFiltersBtn">
           <property name="toolTip">
@@ -258,6 +289,16 @@
            <bool>false</bool>
           </property>
          </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Method:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="methodComboBox"/>
         </item>
        </layout>
       </item>
@@ -441,6 +482,7 @@
     <addaction name="actionRemove_checked"/>
     <addaction name="actionSelect_files_in_concrete_folder"/>
     <addaction name="actionRemoved_checked_to_Trash"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWork_with_results"/>
