@@ -26,3 +26,6 @@ QDialog -> FiltersDialog
 
 ## Windows build instruction
 Russian materials: [1](http://recog.ru/blog/opencv/4.html), [2](http://hryu.livejournal.com/151430.html)
+
+## Additional
+You can read more about histogram comparison in [http://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.html](http://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/histogram_comparison/histogram_comparison.html)  
