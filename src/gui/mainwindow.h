@@ -9,6 +9,7 @@
 #include "../gui/dialog/filtersdialog.h"
 #include "../worker/duplicatefinder.h"
 #include "../worker/duplacatehistogramfinder.h"
+#include "../worker/duplacatehistogramqfinder.h"
 #include "../hashfileinfostruct.h"
 #include "../constants.h"
 #include <QProcess>
@@ -27,7 +28,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    enum DiffSearchMethod { pHash, Histogram };
+    enum DiffSearchMethod { pHash, Histogram, HistogramQ };
     Q_ENUM(DiffSearchMethod)
     enum HistogramMethod {CV_COMP_CORREL=0, CV_COMP_CHISQR=1, CV_COMP_INTERSECT=2, CV_COMP_BHATTACHARYYA=3 };
     Q_ENUM(HistogramMethod)
@@ -53,6 +54,7 @@ private:
     // Duplicate files search
     void startDuplicateSearchInBackground();
     void startDuplicateHistogramSearchInBackground();
+    void startDuplicateHistogramQSearchInBackground();
     void saveItemsToFile(const QString &fileName);
     void setUiPushButtonsEnabled(bool flag);
     // Drag Drop

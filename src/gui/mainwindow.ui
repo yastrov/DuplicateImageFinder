@@ -242,8 +242,11 @@
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label">
+          <property name="toolTip">
+           <string>Coeff Equal</string>
+          </property>
           <property name="text">
-           <string>Delta:</string>
+           <string>Coeff:</string>
           </property>
          </widget>
         </item>
@@ -262,9 +265,12 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="deltaSpinBox">
+         <widget class="QDoubleSpinBox" name="coeffEqualSpinBox">
           <property name="toolTip">
            <string>Difference between two pictures.</string>
+          </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
           </property>
           <property name="value">
            <double>0.700000000000000</double>

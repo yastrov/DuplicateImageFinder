@@ -109,6 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // ComboBox
     ui->AlgoComboBox->addItem(tr("pHash"), DiffSearchMethod::pHash);
     ui->AlgoComboBox->addItem(tr("Histogram compare"), DiffSearchMethod::Histogram);
+    ui->AlgoComboBox->addItem(tr("Histogram Four compare"), DiffSearchMethod::Histogram);
     ui->AlgoComboBox->setCurrentIndex(1);
 }
 
@@ -259,7 +260,7 @@ void MainWindow::startDuplicateHistogramSearchInBackground()
         worker->setQDir(dirs);
 
         Local_Hist_Settings1 settings;
-        settings.epsilon = ui->deltaSpinBox->value();
+        settings.epsilon = ui->coeffEqualSpinBox->value();
         const QVariant method = ui->methodComboBox->currentData();
         settings.hist_compare_method = method.value<HistogramMethod>();
         worker->setSettings(settings);
@@ -280,6 +281,49 @@ void MainWindow::startDuplicateHistogramSearchInBackground()
 
         connect(worker, &DuplacateHistogramFinder::sayTotalFiles, this, &MainWindow::maximumFilesFoProgressReceived);
         connect(worker, &DuplacateHistogramFinder::currentProcessedFiles, this, &MainWindow::currentProcessedFilesForProgressReceived);
+#ifdef MYPREFIX_DEBUG
+        qDebug() << "startThread";
+#endif
+        thread->start();
+        setUiPushButtonsEnabled(false);
+    }
+}
+void MainWindow::startDuplicateHistogramQSearchInBackground()
+{
+#ifdef MYPREFIX_DEBUG
+    qDebug() << "startDuplicateHistogramQSearchInBackground";
+#endif
+    if (thread->isRunning()) {
+        thread->wait();
+    }
+    QList<QDir> dirs = getElementsFromDirsListWidget();
+    if(!dirs.isEmpty() && !thread->isRunning())
+    {
+        DuplacateHistogramQFinder *worker = new DuplacateHistogramQFinder(nullptr);
+        worker->setQDir(dirs);
+
+        Local_Hist_Settings1 settings;
+        settings.epsilon = ui->coeffEqualSpinBox->value();
+        const QVariant method = ui->methodComboBox->currentData();
+        settings.hist_compare_method = method.value<HistogramMethod>();
+        worker->setSettings(settings);
+
+        if(useFilters()) worker->setFilters(fileFilters);
+        callBeforeBackgrowndWorkerStarted();
+        worker->moveToThread(thread);
+        //connect(thread, SIGNAL(started()), worker, SLOT(process()));
+        QObject::connect(thread, &QThread::started, worker, &DuplacateHistogramQFinder::process);
+        //connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+        /*No examples where QThread::finished connected to &QThread::quit !
+         * And then we need Worker::finished. */
+        QObject::connect(worker, &DuplacateHistogramQFinder::finished, thread, &QThread::quit);
+        QObject::connect(thread, &QThread::finished, worker, &DuplacateHistogramQFinder::deleteLater);//From Off documentation
+        QObject::connect(worker, &DuplacateHistogramQFinder::finished, this, &MainWindow::finishedThread);
+        //connect(worker, SIGNAL(finishedWData(QList<HashFileInfoStruct> *)), this, SLOT(showDuplicatesInTable(QList<HashFileInfoStruct> *)));
+        QObject::connect(worker, &DuplacateHistogramQFinder::finishedWData, this, &MainWindow::showDuplicatesInTable);
+
+        connect(worker, &DuplacateHistogramQFinder::sayTotalFiles, this, &MainWindow::maximumFilesFoProgressReceived);
+        connect(worker, &DuplacateHistogramQFinder::currentProcessedFiles, this, &MainWindow::currentProcessedFilesForProgressReceived);
 #ifdef MYPREFIX_DEBUG
         qDebug() << "startThread";
 #endif
@@ -337,6 +381,8 @@ void MainWindow::on_pushButton_Duplicate_Search_clicked()
             startDuplicateSearchInBackground(); break;
         case DiffSearchMethod::Histogram:
             startDuplicateHistogramSearchInBackground(); break;
+        case DiffSearchMethod::HistogramQ:
+            startDuplicateHistogramQSearchInBackground(); break;
     }
 }
 
@@ -542,7 +588,7 @@ void MainWindow::on_AlgoComboBox_currentIndexChanged(int index)
     ui->methodComboBox->clear();
     const QVariant variant = ui->AlgoComboBox->currentData();
     const DiffSearchMethod method = variant.value<DiffSearchMethod>();
-    if(method == DiffSearchMethod::Histogram) {
+    if(method == DiffSearchMethod::Histogram || method == DiffSearchMethod::HistogramQ) {
         ui->methodComboBox->addItem(tr("Correlation"), HistogramMethod::CV_COMP_CORREL);
         ui->methodComboBox->addItem(tr("Chi-Square"), HistogramMethod::CV_COMP_CHISQR);
         ui->methodComboBox->addItem(tr("Intersection"), HistogramMethod::CV_COMP_INTERSECT);
