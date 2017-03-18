@@ -551,6 +551,7 @@ void MainWindow::on_setFiltersBtn_clicked()
 {
     FiltersDialog f;
     f.setActiveFilters(fileFilters);
+    f.setStyleSheet(this->styleSheet());
     if(f.exec() == QDialog::Accepted){
         fileFilters = f.getActiveFilters();
     }
