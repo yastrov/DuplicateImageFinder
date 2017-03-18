@@ -7,7 +7,7 @@ typedef struct {
     QString fileName;
     QByteArray hash;
     bool checked;
-    uint groupID;
+    quint64 groupID;
     qint64 size;
     uint height, width;
 } HashFileInfoStruct;

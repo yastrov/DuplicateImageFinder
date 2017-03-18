@@ -8,7 +8,9 @@
 #include "../model/duplicatestablemodel.h"
 #include "../gui/dialog/filtersdialog.h"
 #include "../worker/duplicatefinder.h"
+#include "../worker/duplacatehistogramfinder.h"
 #include "../hashfileinfostruct.h"
+#include "../constants.h"
 #include <QProcess>
 #if defined(USE_WIN_EXTRAS) && defined(Q_OS_WIN)
 #include <QWinTaskbarButton>
@@ -46,6 +48,7 @@ private:
     void initTableWidget();
     // Duplicate files search
     void startDuplicateSearchInBackground();
+    void startDuplicateHistogramSearchInBackground();
     void saveItemsToFile(const QString &fileName);
     void setUiPushButtonsEnabled(bool flag);
     // Drag Drop
@@ -55,6 +58,8 @@ private:
     void callBeforeBackgrowndWorkerStarted();
     // Filters
     bool useFilters() const;
+
+    int maxImageHeight;
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
@@ -70,10 +75,11 @@ private slots:
     void showDuplicatesInTable(QSharedPtrListHFIS itemsPtr);
     void createCustomPopupMenuForTableView(const QPoint &pos);
     void on_setFiltersBtn_clicked();
-    void maximumFilesFoProgressReceived(quint64 count);
+    void maximumFilesFoProgressReceived(q_coll_s_t count);
     // Progress Bars
-    void currentProcessedFilesForProgressReceived(quint64 count);
+    void currentProcessedFilesForProgressReceived(q_coll_s_t count);
     void finishedThread();
+    void on_actionHistogramFind_triggered();
 };
 
 #endif // MAINWINDOW_H

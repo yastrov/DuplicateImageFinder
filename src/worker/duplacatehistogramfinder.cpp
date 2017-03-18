@@ -32,14 +32,15 @@ void DuplacateHistogramFinder::process()
     double diff;
     const int compare_method = settings.hist_compare_method;
     const double epsilon = settings.epsilon;
-    size_t current_group = 1;
-    QMultiHash<size_t, Local_Hist_FInfo1 *> store;
-    for(int i=0; i<total_files; ++i)
+    quint64 current_group = 1;
+    QMultiHash<quint64, Local_Hist_FInfo1 *> store;
+    store.reserve(total_files);
+    for(q_coll_s_t i=0; i<total_files; ++i)
     {
         base = images_p[i];
         if(base != nullptr) {
             store.insert(current_group, base);
-            for(int j=i+1; j<total_files; ++j)
+            for(q_coll_s_t j=i+1; j<total_files; ++j)
             {
                 second = images_p[j];
                 if(second != nullptr) {
@@ -56,13 +57,13 @@ void DuplacateHistogramFinder::process()
     // reduceToResult
     result = QSharedPtrListHFIS(new QList<HashFileInfoStruct>());
 #ifdef MYPREFIX_DEBUG
-    qDebug() << "DuplacateHistogramFinder::reduceToResult:: reserve memory for result";
+    qDebug() << "DuplacateHistogramFinder::reduceToResult:: reserve memory for result: "<<store.size();
 #endif
     result.data()->reserve(store.size());
-    QSetIterator<size_t> it(store.keys().toSet());
+    QSetIterator<quint64> it(store.keys().toSet());
     while(it.hasNext())
     {
-        const size_t &key = it.next();
+        const quint64 &key = it.next();
         QList<Local_Hist_FInfo1 *> values = store.values(key);
         if(values.length() < 2)
             continue;
@@ -96,7 +97,7 @@ void DuplacateHistogramFinder::process()
     images_p.clear();
     images.clear();
     //
-
+    qDebug()<<"RESULT OF DUP: "<<result->size();
     emit currentProcessedFiles(result->size());
     emit finishedWData(result);
     emit finished();

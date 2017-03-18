@@ -50,7 +50,8 @@ SOURCES += src/main.cpp\
     src/worker/dirwalker.cpp \
     src/worker/duplicatefinder.cpp \
     src/model/basetablemodel.cpp \
-    src/model/duplicatestablemodel.cpp
+    src/model/duplicatestablemodel.cpp \
+    src/worker/duplacatehistogramfinder.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/hashfileinfostruct.h \
@@ -58,7 +59,9 @@ HEADERS  += src/gui/mainwindow.h \
     src/worker/dirwalker.h \
     src/worker/duplicatefinder.h \
     src/model/basetablemodel.h \
-    src/model/duplicatestablemodel.h
+    src/model/duplicatestablemodel.h \
+    src/worker/duplacatehistogramfinder.h \
+    src/constants.h
 
 FORMS    += src/gui/mainwindow.ui
 

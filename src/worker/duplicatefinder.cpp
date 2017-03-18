@@ -112,7 +112,7 @@ void DuplicateFinder::reduceToResult()
 #endif
     result.data()->reserve(processed_files);
     HashFileInfoStruct s;
-    int groupId = 0;
+    quint64 groupId = 0;
     bool checked = false;
 
     QList<HashFileInfoStruct> * const list = result.data();

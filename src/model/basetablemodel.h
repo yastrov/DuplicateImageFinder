@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QAbstractTableModel>
 #include "../hashfileinfostruct.h"
+#include "../constants.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDir>

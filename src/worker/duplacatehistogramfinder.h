@@ -15,6 +15,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <algorithm> // For sorting
+#include "../constants.h"
 
 #define SAY_PROGRESS_EVERY 10
 

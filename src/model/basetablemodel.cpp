@@ -122,7 +122,7 @@ void BaseTableModel::loadFromFileFunc(const QString &fileName)
 void BaseTableModel::removeCheckedFunc()
 {
     QList<HashFileInfoStruct>::iterator it = items->begin();
-    int removed = 0;
+    q_coll_s_t removed = 0;
     emit this->layoutAboutToBeChanged();
     while(it != items->end())
     {
@@ -148,7 +148,7 @@ void BaseTableModel::removeCheckedFunc()
          * (that have been changed because previous row deleted too.)
         */
     emit this->layoutChanged();
-    const int count = items->count();
+    const q_coll_s_t count = items->count();
     emit dataChanged(createIndex(0,0), createIndex(count,0));
 }
 
@@ -166,7 +166,7 @@ void BaseTableModel::removeCheckedToTrashFunc()
     shfos.fFlags = FOF_ALLOWUNDO; // use the recycle bin
     // End WinAPI
     QList<HashFileInfoStruct>::iterator it = items->begin();
-    int removed = 0;
+    q_coll_s_t removed = 0;
     emit this->layoutAboutToBeChanged();
     while(it != items->end())
     {
@@ -201,7 +201,7 @@ void BaseTableModel::removeCheckedToTrashFunc()
      * (that have been changed because previous row deleted too.)
     */
     emit this->layoutChanged();
-    const int count = items->count();
+    const q_coll_s_t count = items->count();
     emit dataChanged(createIndex(0,0), createIndex(count,0));
 }
 #endif
@@ -232,7 +232,7 @@ void BaseTableModel::unselectAll()
         return;
 
     QList<HashFileInfoStruct> * const list = items.data();
-    const int count = list->count();
+    const q_coll_s_t count = list->count();
     QMutableListIterator<HashFileInfoStruct> it(*list);
     while(it.hasNext()){
         HashFileInfoStruct &strct = it.next();
@@ -252,7 +252,7 @@ qDebug() << "BaseTableModel::selectFilesInFolder: "<<dirName;
         return;
     }
     QList<HashFileInfoStruct> * const list = items.data();
-    const int count = list->count();
+    const q_coll_s_t count = list->count();
     QMutableListIterator<HashFileInfoStruct> it(*list);
     while(it.hasNext()){
         HashFileInfoStruct &strct = it.next();
