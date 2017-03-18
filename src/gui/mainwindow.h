@@ -30,7 +30,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    enum DiffSearchMethod { pHash, Histogram, HistogramQ };
+    enum DiffSearchMethod { dHash, Histogram, HistogramQ };
     Q_ENUM(DiffSearchMethod)
     enum HistogramMethod {CV_COMP_CORREL=0, CV_COMP_CHISQR=1, CV_COMP_INTERSECT=2, CV_COMP_BHATTACHARYYA=3 };
     Q_ENUM(HistogramMethod)

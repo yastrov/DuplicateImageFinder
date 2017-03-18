@@ -105,7 +105,7 @@ MainWindow::MainWindow(QWidget *parent) :
     });
     connect(ui->actionAbout_Qt, &QAction::triggered, this, [this](){ QMessageBox::aboutQt(this); });
     // ComboBox
-    ui->AlgoComboBox->addItem(tr("pHash"), DiffSearchMethod::pHash);
+    ui->AlgoComboBox->addItem(tr("dHash"), DiffSearchMethod::dHash);
     ui->AlgoComboBox->addItem(tr("Histogram compare"), DiffSearchMethod::Histogram);
     ui->AlgoComboBox->addItem(tr("Histogram Four compare"), DiffSearchMethod::Histogram);
     ui->AlgoComboBox->setCurrentIndex(1);
@@ -376,7 +376,7 @@ void MainWindow::on_pushButton_Duplicate_Search_clicked()
     const QVariant variant = ui->AlgoComboBox->currentData();
     const DiffSearchMethod method = variant.value<DiffSearchMethod>();
     switch(method) {
-        case DiffSearchMethod::pHash:
+        case DiffSearchMethod::dHash:
             startDuplicateSearchInBackground(); break;
         case DiffSearchMethod::Histogram:
             startDuplicateHistogramSearchInBackground(); break;
