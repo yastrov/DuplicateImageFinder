@@ -31,6 +31,7 @@ DuplicatesTableModel::DuplicatesTableModel(QSharedPtrListHFIS content, int maxIm
         data.pixmap = QPixmap::fromImage(image).scaledToHeight(maxImageHeight);
         cache.insert(s.fileName, data);
     }
+    sort(Column::size, Qt::DescendingOrder);
 }
 
 int DuplicatesTableModel::rowCount(const QModelIndex &index) const
@@ -185,38 +186,100 @@ void DuplicatesTableModel::sort(int column, Qt::SortOrder order)
     switch(column) {
     case Column::checked:
         std::sort(items->begin(), items->end(), [](const HashFileInfoStruct &v1, const HashFileInfoStruct &v2)->bool {
+            if(v1.groupID < v2.groupID) {
+                return true;
+            }
+            if(v1.groupID > v2.groupID) {
+                return false;
+            }
             if(v1.checked && !v2.checked)
                 return true;
             return false;
         }); break;
     case Column::fileName:
         std::sort(items->begin(), items->end(), [](const HashFileInfoStruct &v1, const HashFileInfoStruct &v2)->bool {
-            return v1.fileName > v2.fileName;
+            if(v1.groupID < v2.groupID) {
+                return true;
+            }
+            if(v1.groupID > v2.groupID) {
+                return false;
+            }
+            if(v1.fileName < v2.fileName) {
+                return true;
+            }
+            return false;
         });
         break;
     case Column::hash:
         std::sort(items->begin(), items->end(), [](const HashFileInfoStruct &v1, const HashFileInfoStruct &v2)->bool {
-            return v1.hash > v2.hash;
+            if(v1.groupID < v2.groupID) {
+                return true;
+            }
+            if(v1.groupID > v2.groupID) {
+                return false;
+            }
+            return v1.hash < v2.hash;
         });
         break;
     case Column::groupId:
         std::sort(items->begin(), items->end(), [](const HashFileInfoStruct &v1, const HashFileInfoStruct &v2)->bool {
-            return v1.groupID > v2.groupID;
+            return v1.groupID < v2.groupID;
         });
         break;
     case Column::size:
         std::sort(items->begin(), items->end(), [](const HashFileInfoStruct &v1, const HashFileInfoStruct &v2)->bool {
-            return v1.size > v2.size;
+            if(v1.groupID < v2.groupID) {
+                return true;
+            }
+            if(v1.groupID > v2.groupID) {
+                return false;
+            }
+            if(v1.size < v2.size) {
+                return true;
+            }
+            return false;
         });
         break;
     case Column::height:
         std::sort(items->begin(), items->end(), [](const HashFileInfoStruct &v1, const HashFileInfoStruct &v2)->bool {
-            return v1.height > v2.height;
+            if(v1.groupID < v2.groupID) {
+                return true;
+            }
+            if(v1.groupID > v2.groupID) {
+                return false;
+            }
+            if(v1.height < v2.height) {
+                return true;
+            }
+            return false;
         });
         break;
     case Column::width:
         std::sort(items->begin(), items->end(), [](const HashFileInfoStruct &v1, const HashFileInfoStruct &v2)->bool {
-            return v1.width > v2.width;
+            if(v1.groupID < v2.groupID) {
+                return true;
+            }
+            if(v1.groupID > v2.groupID) {
+                return false;
+            }
+            if(v1.width < v2.width) {
+                return true;
+            }
+            return false;
+        });
+        break;
+    case Column::difference:
+        std::sort(items->begin(), items->end(), [](const HashFileInfoStruct &v1, const HashFileInfoStruct &v2)->bool {
+            if(v1.groupID < v2.groupID) {
+                return true;
+            }
+            if(v1.groupID > v2.groupID) {
+                return false;
+            }
+            if(v1.diff < v2.diff) {
+                return true;
+            }
+            return false;
         });
         break;
     default: return;
