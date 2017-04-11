@@ -48,7 +48,9 @@ void BaseTableModel::saveToFileFunc(const QString &fileName) const
 
         out << tr("Group ID") << delimeter;
         out << tr("Size") << delimeter;
-        out << tr("Hash") << delimeter << tr("FileName");
+        out << tr("Hash") << delimeter << tr("FileName")<< delimeter;
+        out << tr("Height") << delimeter << tr("Width")<< delimeter;
+        out << tr("Diff");
         out << endOfLine;
 
         QListIterator<HashFileInfoStruct> it(*items);
@@ -59,6 +61,7 @@ void BaseTableModel::saveToFileFunc(const QString &fileName) const
             out << s.size << delimeter << s.hash.toHex() << delimeter << s.fileName
                 << delimeter << QString("%1").arg(s.height)
                 << delimeter << QString("%1").arg(s.width)
+                << delimeter << QString("%1").arg(s.diff)
                 << endOfLine;
         }
         file.close();
@@ -94,21 +97,23 @@ void BaseTableModel::loadFromFileFunc(const QString &fileName)
         items.data()->reserve(newItemsCount);
         QList<HashFileInfoStruct> * const list = items.data();
         QStringList lineList;
+        QByteArray tmp;
         while(!in.atEnd()) {
             lineList = in.readLine().split(delimeter);
-            if(lineList.size() < 6) {
+            if(lineList.size() < 7) {
                 file.close();
                 return;
             }
             HashFileInfoStruct strct;
             strct.groupID = lineList[0].toUInt();
             strct.size = lineList[1].toLong();
-            QByteArray tmp;
             tmp.append(lineList[2]);
             strct.hash = QByteArray::fromHex(tmp);
+            tmp.clear();
             strct.fileName = lineList[3];
             strct.height = lineList[4].toUInt();
             strct.width = lineList[5].toUInt();
+            strct.diff = lineList[6].toDouble();
             strct.checked = false;
             list->append(strct);
         }
