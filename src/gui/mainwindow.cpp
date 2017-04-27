@@ -106,8 +106,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionAbout_Qt, &QAction::triggered, this, [this](){ QMessageBox::aboutQt(this); });
     // ComboBox
     ui->AlgoComboBox->addItem(tr("dHash"), DiffSearchMethod::dHash);
+    ui->AlgoComboBox->setItemData(0,
+                                  tr("Very quick, but very simple algorithm.\nMany false results."),
+                                  Qt::ToolTipRole);
     ui->AlgoComboBox->addItem(tr("Histogram compare"), DiffSearchMethod::Histogram);
-    ui->AlgoComboBox->addItem(tr("Histogram Four compare"), DiffSearchMethod::Histogram);
+    ui->AlgoComboBox->setItemData(1,
+                                  tr("Quick, based on histogram compare algorithm.\nMay have false results."),
+                                  Qt::ToolTipRole);
+    ui->AlgoComboBox->addItem(tr("Histogram Four compare"), DiffSearchMethod::HistogramQ);
+    ui->AlgoComboBox->setItemData(2,
+                                  tr("Quick, based on histogram compare\nalgorithm (calculate 4 histogram to 1 image).\nBetter than simple histogram compare,\nneed more calculations and memory."),
+                                  Qt::ToolTipRole);
     ui->AlgoComboBox->setCurrentIndex(1);
     loadSettings();
 }
