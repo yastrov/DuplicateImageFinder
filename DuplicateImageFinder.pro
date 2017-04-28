@@ -37,16 +37,28 @@ win32-g++: {
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_highgui2413d.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_core2413d.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_imgproc2413d.dll.a
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_features2d2413d.dll.a
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_objdetect2413d.dll.a
+LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_nonfree2413d.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_highgui2413d.dll
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_core2413d.dll
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_imgproc2413d.dll
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_features2d2413d.dll
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_objdetect2413d.dll
+LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_nonfree2413d.dll
     } else {
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_highgui2413.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_core2413.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_imgproc2413.dll.a
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_features2d2413.dll.a
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_objdetect2413.dll.a
+LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\lib\\libopencv_nonfree2413.dll.a
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_highgui2413.dll
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_core2413.dll
         LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_imgproc2413.dll
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_features2d2413.dll
+        LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_objdetect2413.dll
+LIBS+=C:\\OpenCV\\2.4.13\\opencv\\build\\bin\\libopencv_nonfree2413.dll
     }
 }
 
@@ -60,7 +72,8 @@ SOURCES += src/main.cpp\
     src/settingshelper.cpp \
     src/worker/duplacatehistogramfinder.cpp \
     src/worker/duplacatehistogramqfinder.cpp \
-    src/gui/dialog/settingsdialog.cpp
+    src/gui/dialog/settingsdialog.cpp \
+    src/worker/diplicatesiftdistancefinder.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/hashfileinfostruct.h \
@@ -73,12 +86,13 @@ HEADERS  += src/gui/mainwindow.h \
     src/worker/duplacatehistogramfinder.h \
     src/constants.h \
     src/worker/duplacatehistogramqfinder.h \
-    src/gui/dialog/settingsdialog.h
+    src/gui/dialog/settingsdialog.h \
+    src/worker/diplicatesiftdistancefinder.h
 
 FORMS    += src/gui/mainwindow.ui \
     src/gui/dialog/settingsdialog.ui
 
-VERSION = 0.0.0.1
+VERSION = 0.0.0.2
 QMAKE_TARGET_PRODUCT = DuplicateImageFinder
 QMAKE_TARGET_DESCRIPTION = "Program for find duplicates or images."
 QMAKE_TARGET_COPYRIGHT = (c) Yuriy Astrov
