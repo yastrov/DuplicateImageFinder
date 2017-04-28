@@ -18,6 +18,12 @@ debug {
 DEFINES += QT_USE_QSTRINGBUILDER
 CONFIG += c++11
 
+unix: {
+    #LIBS += -lopencv_highgui -lopencv_core -lopencv_features2d -lopencv_calib3d -lopencv_flann -lopencv_nonfree
+    CONFIG += link_pkgconfig
+    PKGCONFIG += opencv
+}
+
 win32: {
     QT += winextras
     DEFINES += USE_WIN_EXTRAS
