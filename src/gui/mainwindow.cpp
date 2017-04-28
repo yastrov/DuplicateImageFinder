@@ -117,6 +117,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->AlgoComboBox->setItemData(2,
                                   tr("Quick, based on histogram compare\nalgorithm (calculate 4 histogram to 1 image).\nBetter than simple histogram compare,\nneed more calculations and memory."),
                                   Qt::ToolTipRole);
+    ui->AlgoComboBox->addItem(tr("SIFT distance"), DiffSearchMethod::SIFT_DISTANCE);
+    ui->AlgoComboBox->setItemData(2,
+                                  tr("SIFT distance."),
+                                  Qt::ToolTipRole);
     ui->AlgoComboBox->setCurrentIndex(1);
     loadSettings();
 }
@@ -340,6 +344,44 @@ void MainWindow::startDuplicateHistogramQSearchInBackground()
     }
 }
 
+void MainWindow::startDuplicateSIFTDistanceSearchInBackground()
+{
+    if (thread->isRunning()) {
+        thread->wait();
+    }
+    QList<QDir> dirs = getElementsFromDirsListWidget();
+    if(!dirs.isEmpty() && !thread->isRunning())
+    {
+        DiplicateSIFTDistanceFinder *worker = new DiplicateSIFTDistanceFinder(nullptr);
+        worker->setQDir(dirs);
+
+        Local_SIFT_Settings settings;
+        settings.epsilon = ui->coeffEqualSpinBox->value();
+        settings.minHessian = 400;
+        worker->setSettings(settings);
+
+        if(useFilters()) worker->setFilters(fileFilters);
+        callBeforeBackgrowndWorkerStarted();
+        worker->moveToThread(thread);
+        //connect(thread, SIGNAL(started()), worker, SLOT(process()));
+        QObject::connect(thread, &QThread::started, worker, &DiplicateSIFTDistanceFinder::process);
+        //connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+        /*No examples where QThread::finished connected to &QThread::quit !
+                 * And then we need Worker::finished. */
+        QObject::connect(worker, &DiplicateSIFTDistanceFinder::finished, thread, &QThread::quit);
+        QObject::connect(thread, &QThread::finished, worker, &DuplacateHistogramQFinder::deleteLater);//From Off documentation
+        QObject::connect(worker, &DiplicateSIFTDistanceFinder::finished, this, &MainWindow::finishedThread);
+        //connect(worker, SIGNAL(finishedWData(QList<HashFileInfoStruct> *)), this, SLOT(showDuplicatesInTable(QList<HashFileInfoStruct> *)));
+        QObject::connect(worker, &DiplicateSIFTDistanceFinder::finishedWData, this, &MainWindow::showDuplicatesInTable);
+
+        connect(worker, &DiplicateSIFTDistanceFinder::sayTotalFiles, this, &MainWindow::maximumFilesFoProgressReceived);
+        connect(worker, &DiplicateSIFTDistanceFinder::currentProcessedFiles, this, &MainWindow::currentProcessedFilesForProgressReceived);
+
+        thread->start();
+        setUiPushButtonsEnabled(false);
+    }
+}
+
 /*
  * Open Folder Choose dialog and add Dirname to ListWidget
  */
@@ -391,6 +433,8 @@ void MainWindow::on_pushButton_Duplicate_Search_clicked()
             startDuplicateHistogramSearchInBackground(); break;
         case DiffSearchMethod::HistogramQ:
             startDuplicateHistogramQSearchInBackground(); break;
+        case DiffSearchMethod::SIFT_DISTANCE:
+            startDuplicateSIFTDistanceSearchInBackground(); break;
     }
 }
 

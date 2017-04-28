@@ -11,6 +11,7 @@
 #include "../worker/duplicatefinder.h"
 #include "../worker/duplacatehistogramfinder.h"
 #include "../worker/duplacatehistogramqfinder.h"
+#include "../worker/diplicatesiftdistancefinder.h"
 #include "../hashfileinfostruct.h"
 #include "../constants.h"
 #include "../settingshelper.h"
@@ -30,7 +31,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    enum DiffSearchMethod { dHash, Histogram, HistogramQ };
+    enum DiffSearchMethod { dHash, Histogram, HistogramQ, SIFT_DISTANCE };
     Q_ENUM(DiffSearchMethod)
     enum HistogramMethod {CV_COMP_CORREL=0, CV_COMP_CHISQR=1, CV_COMP_INTERSECT=2, CV_COMP_BHATTACHARYYA=3 };
     Q_ENUM(HistogramMethod)
@@ -57,6 +58,7 @@ private:
     void startDuplicateSearchInBackground();
     void startDuplicateHistogramSearchInBackground();
     void startDuplicateHistogramQSearchInBackground();
+    void startDuplicateSIFTDistanceSearchInBackground();
     void saveItemsToFile(const QString &fileName);
     void setUiPushButtonsEnabled(bool flag);
     // Drag Drop
