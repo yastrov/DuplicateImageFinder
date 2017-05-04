@@ -11,8 +11,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = DuplicateImageFinder
 TEMPLATE = app
 
-debug {
-  DEFINES += MYPREFIX_DEBUG
+CONFIG(release, debug|release): {
+    DEFINES += QT_NO_DEBUG_OUTPUT
+    DEFINES += MYPREFIX_RELEASE
+} else {
+    DEFINES += MYPREFIX_DEBUG
 }
 
 DEFINES += QT_USE_QSTRINGBUILDER
