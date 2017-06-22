@@ -67,10 +67,8 @@ void DuplacateHistogramQFinder::process()
     qDebug() << "DuplacateHistogramQFinder::reduceToResult:: reserve memory for result: "<<store.size();
 #endif
     result.data()->reserve(store.size());
-    QSetIterator<quint64> it(store.keys().toSet());
-    while(it.hasNext())
+    for(const quint64 &key: store.uniqueKeys())
     {
-        const quint64 &key = it.next();
         QList<Local_Hist_FInfo2 *> values = store.values(key);
         if(values.length() < 2)
             continue;
