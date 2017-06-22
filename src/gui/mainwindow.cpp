@@ -177,6 +177,7 @@ void MainWindow::initTableWidget()
     QTableView *table = ui->tableView;
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
     table->setSelectionMode(QAbstractItemView::SingleSelection);
+    table->horizontalHeader()->setSectionsMovable(true);
     table->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(table, &QTableView::customContextMenuRequested, this, &MainWindow::createCustomPopupMenuForTableView);
 }
