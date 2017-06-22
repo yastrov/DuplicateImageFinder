@@ -90,10 +90,8 @@ void DuplicateFinder::clearNoDuplicatedSize()
 #ifdef MYPREFIX_DEBUG
     qDebug() << "DuplicateFinder::clearNoDuplicatedSize";
 #endif
-    QSetIterator<QByteArray> it(hashItems.keys().toSet());
-    while(it.hasNext())
+    for(const QByteArray &key: hashItems.uniqueKeys())
     {
-        const QByteArray &key = it.next();
         if(hashItems.count(key) < 2) {
             ++processed_files;
             hashItems.remove(key);
@@ -116,10 +114,8 @@ void DuplicateFinder::reduceToResult()
     bool checked = false;
 
     QList<HashFileInfoStruct> * const list = result.data();
-    QSetIterator<QByteArray> it(hashItems.keys().toSet());
-    while(it.hasNext())
+    for(const QByteArray &key: hashItems.uniqueKeys())
     {
-        const QByteArray &key = it.next();
         checked = false;
         QList<HashFileInfoStruct> values = hashItems.values(key);
         QMutableListIterator<HashFileInfoStruct> vIt(values);
