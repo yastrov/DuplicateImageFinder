@@ -164,6 +164,14 @@ QList<QDir> MainWindow::getElementsFromDirsListWidget()
 
 void MainWindow::addToDirListWidget(const QString &dirName)
 {
+    QAbstractItemModel *model = ui->listWidget->model();
+    const int rows = model->rowCount();
+    QString str;
+    for(int i=0; i<rows; ++i) {
+        str = model->data(model->index(i, 0), Qt::UserRole).toString();
+        if(str == dirName)
+            return;
+    }
     QListWidgetItem *item = new QListWidgetItem(QDir(dirName).absolutePath());
     QVariant variant(dirName);
     item->setData(Qt::UserRole, variant);
